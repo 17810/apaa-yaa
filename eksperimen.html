@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shawqi – Portfolio</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    :root{
+      --violet:#7c3aed;           /* violet */
+      --sky:#38bdf8;              /* sky blue */
+      --bg-day:#e6f2ff;           /* sky blue grey - day */
+      --bg-night:#0b1220;         /* deep navy - night */
+    }
+    body{min-height:100dvh; transition:background 400ms ease,color 250ms ease;}
+
+    /* ===== SKY LAYERS ===== */
+    .sky{position:fixed; inset:0; z-index:-1; overflow:hidden; transition:400ms ease;}
+    .sky.day{background:linear-gradient(180deg,var(--bg-day) 0%,#ffffff 100%);}
+    .sky.night{background:radial-gradient(1100px 600px at 50% -200px,#14213d 0%,var(--bg-night) 60%,#05080f 100%);}
+
+    .sun{position:absolute; width:180px; height:180px; border-radius:50%;
+      top:8%; left:10%;
+      background:radial-gradient(circle at 35% 35%,#fff6d6 0,#ffd36e 55%,#ffb703 75%,rgba(255,183,3,.85) 100%);
+      box-shadow:0 0 60px 16px rgba(255,183,3,.45); animation:floatSun 14s ease-in-out infinite; filter:blur(.2px);}
+    @keyframes floatSun{0%,100%{transform:translateY(0)}50%{transform:translateY(14px)}}
+
+    .moon{position:absolute; width:150px; height:150px; border-radius:50%;
+      top:10%; right:12%;
+      background:radial-gradient(circle at 40% 40%,#fff 0,#d7e2f1 55%,#a3b1c6 100%);
+      box-shadow:0 0 40px 12px rgba(163,177,198,.35); filter:blur(.2px); animation:floatMoon 16s ease-in-out infinite;}
+    .moon:after{content:""; position:absolute; inset:-12px -18px; border-radius:50%; background:#0b1220; mix-blend-mode:multiply;}
+    @keyframes floatMoon{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+
+    .stars,.stars2{position:absolute; inset:0; opacity:0; pointer-events:none; transition:300ms ease;}
+    .night .stars{opacity:.8} .night .stars2{opacity:.45}
+    .stars{background-image:
+      radial-gradient(1px 1px at 20px 30px,#fff,transparent 2px),
+      radial-gradient(1px 1px at 140px 80px,#fff,transparent 2px),
+      radial-gradient(1px 1px at 320px 150px,#fff,transparent 2px),
+      radial-gradient(1px 1px at 520px 50px,#fff,transparent 2px),
+      radial-gradient(1px 1px at 760px 120px,#fff,transparent 2px),
+      radial-gradient(1px 1px at 980px 40px,#fff,transparent 2px);
+      background-size:600px 200px; animation:drift 50s linear infinite;}
+    .stars2{background-image:
+      radial-gradient(1px 1px at 60px 20px,#dbeafe,transparent 2px),
+      radial-gradient(1px 1px at 260px 120px,#e5e7eb,transparent 2px),
+      radial-gradient(1px 1px at 480px 80px,#c7d2fe,transparent 2px),
+      radial-gradient(1px 1px at 860px 160px,#e0e7ff,transparent 2px);
+      background-size:800px 240px; animation:drift 80s linear infinite reverse;}
+    @keyframes drift{from{background-position:0 0}to{background-position:800px 240px}}
+
+    /* ===== UI DECOR ===== */
+    .brand{background:linear-gradient(90deg,var(--violet),var(--sky)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+    .btn-primary{background:linear-gradient(135deg,var(--violet),var(--sky)); color:#fff;}
+    .btn-primary:hover{opacity:.92}
+    .glass{background:rgba(255,255,255,.7); border:1px solid rgba(148,163,184,.35); backdrop-filter: blur(10px);}
+    .night .glass{background:rgba(15,23,42,.7); border:1px solid rgba(51,65,85,.6);}
+    .avatar{width:160px; height:160px; border-radius:1rem; object-fit:cover; box-shadow:0 10px 30px rgba(0,0,0,.18);}
+  </style>
+</head>
+<body class="bg-white text-slate-800 dark:text-slate-100">
+  <!-- Background -->
+  <div id="sky" class="sky day">
+    <div id="sun" class="sun"></div>
+    <div id="moon" class="moon hidden"></div>
+    <div class="stars"></div>
+    <div class="stars2"></div>
+  </div>
+
+  <!-- NAVBAR -->
+  <nav class="sticky top-0 z-30 border-b border-slate-200/60 dark:border-slate-700/60 bg-white/60 dark:bg-slate-900/50 backdrop-blur">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center gap-4">
+      <a href="#" class="font-bold text-lg tracking-tight brand">Shawqi</a>
+      <a href="#about" class="text-sm hover:underline">About</a>
+      <a href="#projects" class="text-sm hover:underline">Projects</a>
+      <a href="#school" class="text-sm hover:underline">School</a>
+      <a href="#contact" class="text-sm hover:underline">Contact</a>
+
+      <div class="ml-auto flex items-center gap-3">
+        <a href="#contact" class="btn-primary px-4 py-2 rounded-xl text-sm shadow">Contact Me</a>
+        <!-- Toggle di NAV -->
+        <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+          <span class="text-xs">☀️</span>
+          <input id="modeToggle" type="checkbox" class="sr-only peer">
+          <span class="w-14 h-8 rounded-full bg-slate-200 peer-checked:bg-slate-700 relative transition-colors">
+            <span class="absolute left-1 top-1 h-6 w-6 rounded-full bg-white peer-checked:translate-x-6 transition-transform"></span>
+          </span>
+          <span class="text-xs">🌙</span>
+        </label>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="max-w-6xl mx-auto px-4 pt-10 pb-8">
+    <div class="grid md:grid-cols-2 gap-8 items-center">
+      <div class="glass p-6 md:p-8 rounded-2xl">
+        <h1 class="text-3xl md:text-4xl font-bold">Hi, I'm <span class="brand">Shawqi</span></h1>
+        <p class="mt-3 text-slate-700 dark:text-slate-300">
+          Student • <b>Junior Programmer</b> • suka English & IT. UI clean minimalis
+          dengan warna <b>violet</b> + <b>sky blue grey</b>.
+        </p>
+        <div class="mt-5 flex flex-wrap gap-3">
+          <a href="#projects" class="btn-primary px-5 py-2.5 rounded-2xl shadow">Lihat Project</a>
+          <a href="#contact" class="px-5 py-2.5 rounded-2xl border border-slate-300 dark:border-slate-600 hover:bg-slate-100/60 dark:hover:bg-slate-800/60">Kontak</a>
+        </div>
+      </div>
+      <div class="flex justify-center">
+        <!-- Ganti src ke file kamu: img/shawqi.jpg, atau upload via tombol di About -->
+        <img id="heroPhoto" alt="Foto Shawqi" class="avatar ring-2 ring-white/80 dark:ring-slate-700" src="me.png"/>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="max-w-6xl mx-auto px-4 pb-12 grid md:grid-cols-3 gap-6">
+    <div class="glass p-6 rounded-2xl md:col-span-2">
+      <div class="flex items-center gap-4 mb-4">
+        <img id="aboutPhoto" class="avatar ring-2 ring-white/80 dark:ring-slate-700" src="img/shawqi.jpg" alt="About Photo">
+        <div>
+          <h2 class="text-xl font-semibold">About Me</h2>
+          <p class="text-sm text-slate-600 dark:text-slate-400">Upload fotomu biar tampil di sini & di hero.</p>
+          <button id="uploadBtn" class="mt-2 px-3 py-2 rounded-md border border-slate-300 dark:border-slate-600 text-sm hover:bg-slate-50 dark:hover:bg-slate-800">Upload Foto</button>
+          <button id="resetPhoto" class="mt-2 ml-2 px-3 py-2 rounded-md border border-slate-300 dark:border-slate-600 text-sm hover:bg-slate-50 dark:hover:bg-slate-800">Reset</button>
+        </div>
+      </div>
+      <p class="text-slate-700 dark:text-slate-300 leading-relaxed">
+        Gue <b>Shawqi Zhafirun Hayyan</b>, pelajar yang ngembangin skill sebagai <b>Junior Programmer</b>.
+        Fokus ke <b>HTML</b>, <b>CSS/Tailwind</b>, dan <b>JavaScript</b>. Suka bikin UI clean tapi ada “hidden effects”.
+      </p>
+      <ul class="list-disc ml-5 mt-4 space-y-1 text-slate-700 dark:text-slate-300">
+        <li>Design vibes: violet + sky blue grey</li>
+        <li>Tools: VS Code, GitHub, Figma, Canva</li>
+        <li>Target: proyek nyata, reusable components, dan portofolio buat magang/kompetisi</li>
+      </ul>
+    </div>
+    <div class="glass p-6 rounded-2xl">
+      <h3 class="font-semibold">Quick Info</h3>
+      <ul class="mt-3 space-y-2 text-sm">
+        <li>Domisili: Karawang, Indonesia</li>
+        <li>Minat: UI/UX, Web Frontend, Animasi CSS</li>
+        <li>Bahasa: Indonesia, English</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SCHOOL -->
+  <section id="school" class="max-w-6xl mx-auto px-4 pb-16">
+    <div class="glass p-6 rounded-2xl">
+      <h2 class="text-xl font-semibold">SMK Sahabat Ilmu (SMK SaHil)</h2>
+      <p class="mt-2 text-slate-700 dark:text-slate-300 leading-relaxed">
+        Sekarang gue belajar di <b>SMK SaHil</b>. Kelas gue angkatan pertama, jadi banyak pengalaman
+        ngebangun budaya belajar dari nol. Fokus ngasah skill <b>IT</b>—terutama web—biar makin mantap jadi
+        <b>Junior Programmer</b> yang siap proyek beneran.
+      </p>
+      <div class="mt-4 grid sm:grid-cols-3 gap-4">
+        <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-700">
+          <p class="font-medium">Kurikulum Praktis</p>
+          <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Banyak tugas proyek & presentasi.</p>
+        </div>
+        <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-700">
+          <p class="font-medium">Komunitas Belajar</p>
+          <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Belajar bareng & sharing mingguan.</p>
+        </div>
+        <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-700">
+          <p class="font-medium">Mindset Growth</p>
+          <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Konsisten bikin proyek kecil.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects" class="max-w-6xl mx-auto px-4 pb-16">
+    <h2 class="text-xl font-semibold mb-6">Selected Projects</h2>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <article class="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
+        <div class="aspect-video bg-gradient-to-br from-[var(--violet)]/20 to-[var(--sky)]/20"></div>
+        <div class="p-4">
+          <h3 class="font-semibold">Elegant Landing</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Tailwind layout + spacing rapi.</p>
+        </div>
+      </article>
+      <article class="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
+        <div class="aspect-video bg-gradient-to-br from-[var(--violet)]/20 to-[var(--sky)]/20"></div>
+        <div class="p-4">
+          <h3 class="font-semibold">Widget Theme</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Toggle siang/malam & jam.</p>
+        </div>
+      </article>
+      <article class="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
+        <div class="aspect-video bg-gradient-to-br from-[var(--violet)]/20 to-[var(--sky)]/20"></div>
+        <div class="p-4">
+          <h3 class="font-semibold">Mini Portfolio</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Komponen reusable & grid responsif.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="max-w-6xl mx-auto px-4 pb-20">
+    <div class="glass p-6 rounded-2xl">
+      <h2 class="text-xl font-semibold">Contact Me</h2>
+      <p class="text-slate-700 dark:text-slate-300 mt-2">Kirim pesan cepat (langsung buka email client).</p>
+      <form class="mt-4 grid sm:grid-cols-2 gap-4" onsubmit="event.preventDefault(); window.location.href = 'mailto:shawqi@example.com?subject=' + encodeURIComponent(this.name.value + ' — ' + this.subject.value) + '&body=' + encodeURIComponent(this.message.value);">
+        <input required name="name" placeholder="Nama kamu" class="px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-white/80 dark:bg-slate-800/70" />
+        <input required name="subject" placeholder="Subjek" class="px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-white/80 dark:bg-slate-800/70" />
+        <textarea required name="message" placeholder="Pesan..." rows="4" class="sm:col-span-2 px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-white/80 dark:bg-slate-800/70"></textarea>
+        <button class="btn-primary px-5 py-3 rounded-xl shadow w-max">Kirim</button>
+      </form>
+    </div>
+  </section>
+
+  <footer class="py-10 text-center text-sm text-slate-500 dark:text-slate-400">
+    © <span id="y"></span> Shawqi Zhafirun • Elegan minimal vibes
+  </footer>
+
+  <!-- Hidden file input -->
+  <input type="file" id="fileInput" accept="image/*" class="hidden" />
+
+  <script>
+    // Year
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // ===== Theme toggle (in navbar) =====
+    const html = document.documentElement;
+    const sky = document.getElementById('sky');
+    const sun = document.getElementById('sun');
+    const moon = document.getElementById('moon');
+    const toggle = document.getElementById('modeToggle');
+
+    function setMode(dark){
+      if(dark){
+        html.classList.add('dark');
+        document.body.classList.add('night');
+        sky.classList.remove('day'); sky.classList.add('night');
+        sun.classList.add('hidden'); moon.classList.remove('hidden');
+      }else{
+        html.classList.remove('dark');
+        document.body.classList.remove('night');
+        sky.classList.remove('night'); sky.classList.add('day');
+        moon.classList.add('hidden'); sun.classList.remove('hidden');
+      }
+      localStorage.setItem('prefers-dark', dark ? '1':'0');
+    }
+    const saved = localStorage.getItem('prefers-dark');
+    const prefers = saved !== null ? saved === '1' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    toggle.checked = prefers; setMode(prefers);
+    toggle.addEventListener('change', e=> setMode(e.target.checked));
+
+    // ===== Photo handling (optional, runtime only) =====
+    const PHOTO_KEY = 'portfolio:photo';
+    const aboutPhoto = document.getElementById('aboutPhoto');
+    const heroPhoto  = document.getElementById('heroPhoto');
+
+    function loadPhoto(){
+      const data = localStorage.getItem(PHOTO_KEY);
+      if(data){ aboutPhoto.src = data; heroPhoto.src = data; }
+      // kalau nggak ada, pakai src default (img/shawqi.jpg)
+    }
+    loadPhoto();
+
+    document.getElementById('uploadBtn').addEventListener('click', ()=>{
+      document.getElementById('fileInput').click();
+    });
+    document.getElementById('fileInput').addEventListener('change', (e)=>{
+      const file = e.target.files?.[0]; if(!file) return;
+      const reader = new FileReader();
+      reader.onload = ()=> {
+        try{
+          localStorage.setItem(PHOTO_KEY, reader.result);
+          loadPhoto();
+        }catch(err){ alert('Ukuran gambar terlalu besar. Pilih foto yang lebih kecil ya.'); }
+      };
+      reader.readAsDataURL(file);
+    });
+    document.getElementById('resetPhoto').addEventListener('click', ()=>{
+      localStorage.removeItem(PHOTO_KEY);
+      // reload untuk kembali ke src default
+      loadPhoto();
+    });
+  </script>
+</body>
+</html>
